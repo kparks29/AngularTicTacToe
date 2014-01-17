@@ -9,6 +9,7 @@ function mainCtrl($scope) {
 		}
 	}
 	$scope.winner = "";
+	$scope.win = false;
 	$scope.moves = 0;
 	$scope.players = [
 		{chip:'X',gamesWon:0},
@@ -28,7 +29,8 @@ function mainCtrl($scope) {
 				if (c==2){$scope.players[1].nextMove[1].col = true;$scope.players[1].nextMove[1].num = i;}
 		 	}
 		 	//check to see if the player won
-			if (r == 3 || c == 3 || d1 == 3 || d2 ==3){return true;}
+			if (r == 3 || c == 3 || d1 == 3 || d2 ==3){$scope.win = true; return true;}
+			else if ($scope.moves == 9) {$scope.winner="cat's game"}
 			  else {
 			  	//if they didnt win check for 2 moves in a row for row, backward diagonal, and forward diagonal
 			 		if (r==2){$scope.players[1].nextMove[0].row = true; $scope.players[1].nextMove[0].num = i;}
@@ -36,7 +38,7 @@ function mainCtrl($scope) {
 			 		else if (d2==2){$scope.players[1].nextMove[3].dia2 = true;}
 				}
 			//check for cat's game
-			if ($scope.moves == 9) {$scope.winner="cat's game"}
+			
 			
 		 }
 	};
@@ -63,25 +65,21 @@ function mainCtrl($scope) {
 			if ($scope.players[1].nextMove[1].col == true && $scope.moves%2 == 1) {
 				
 				for(var i=0;i<$scope.board.length;i++){
-					console.log("i=" + i);
-					console.log("column we are checking=" + $scope.players[1].nextMove[1].num)
-					console.log("value in row=" + $scope.board[i][$scope.players[1].nextMove[1].num])
 					if ($scope.board[i][$scope.players[1].nextMove[1].num] == '') {
 						$scope.board[i][$scope.players[1].nextMove[1].num] = "O";
 						$scope.moves++;
 					} 
 				}
 			}
-			if ($scope.players[1].nextMove[2].dia1 == true) {
-				console.log("next move dia1 = " + $scope.players[1].nextMove[2].dia1)
+			if ($scope.players[1].nextMove[2].dia1 == true  && $scope.moves%2 == 1) {
 				for (var i=0;i<$scope.board.length;i++){
 					if($scope.board[i][i] == '') {
 						$scope.board[i][i] = 'O';
+						$scope.moves++;
 					}
 				} 
 			}
 			if ($scope.players[1].nextMove[3].dia2 == true && $scope.moves%2 == 1) {
-				console.log("next move dia2 = " + $scope.players[1].nextMove[3].dia2)
 				for (var i=0;i<$scope.board.length;i++) {
 					if ($scope.board[i][2-i] == ''){
 						$scope.board[i][2-i] = 'O';
@@ -99,7 +97,6 @@ function mainCtrl($scope) {
 		//setTimeout(function(){
 		//first move
 		if ($scope.moves == 1) {
-			$scope.winner = "computerMove";
 			if ($scope.board[1][1] == '') {
 				$scope.board[1][1] = 'O';
 				$scope.moves++;
@@ -110,23 +107,20 @@ function mainCtrl($scope) {
 
 			}
 		}
-		
+		else if ($scope.moves == 3 && $scope.board[2][2] == $scope.players[0].chip && $scope.board[1][1] == $scope.players[0].chip) {
+			$scope.board[2][0] = $scope.players[1].chip;
+			$scope.moves++;
+		}
 		else if ($scope.moves%2 == 1){
 			//check for win
 			//first reload nextMoves
-			console.log("first: row=" + $scope.players[1].nextMove[0].row + $scope.players[1].nextMove[0].num +" col=" + $scope.players[1].nextMove[1].col + $scope.players[1].nextMove[1].num + " dia1=" + $scope.players[1].nextMove[2].dia1 +" dia2=" + $scope.players[1].nextMove[3].dia2);
 			$scope.resetNextMove();
-			console.log("after first: row=" + $scope.players[1].nextMove[0].row + $scope.players[1].nextMove[0].num +" col=" + $scope.players[1].nextMove[1].col + $scope.players[1].nextMove[1].num + " dia1=" + $scope.players[1].nextMove[2].dia1 +" dia2=" + $scope.players[1].nextMove[3].dia2);
 			$scope.checkWin($scope.players[1].chip);
-			console.log("second: row=" + $scope.players[1].nextMove[0].row + $scope.players[1].nextMove[0].num +" col=" + $scope.players[1].nextMove[1].col + $scope.players[1].nextMove[1].num + " dia1=" + $scope.players[1].nextMove[2].dia1 +" dia2=" + $scope.players[1].nextMove[3].dia2);
 			$scope.nextMove();
 			//reload nextMoves
 			if ($scope.moves%2 == 1) {
-				console.log("before 2nd reset: row=" + $scope.players[1].nextMove[0].row + $scope.players[1].nextMove[0].num +" col=" + $scope.players[1].nextMove[1].col + $scope.players[1].nextMove[1].num + " dia1=" + $scope.players[1].nextMove[2].dia1 +" dia2=" + $scope.players[1].nextMove[3].dia2);
 				$scope.resetNextMove();
-				console.log("after 2nd reset: row=" + $scope.players[1].nextMove[0].row + $scope.players[1].nextMove[0].num +" col=" + $scope.players[1].nextMove[1].col + $scope.players[1].nextMove[1].num + " dia1=" + $scope.players[1].nextMove[2].dia1 +" dia2=" + $scope.players[1].nextMove[3].dia2);
 				$scope.checkWin($scope.players[0].chip);
-				console.log("third: row=" + $scope.players[1].nextMove[0].row + $scope.players[1].nextMove[0].num +" col=" + $scope.players[1].nextMove[1].col + $scope.players[1].nextMove[1].num + " dia1=" + $scope.players[1].nextMove[2].dia1 +" dia2=" + $scope.players[1].nextMove[3].dia2);
 				//check for block
 				$scope.nextMove();
 				//random
@@ -144,13 +138,16 @@ function mainCtrl($scope) {
 
 		}
 		//clear the winner screen
-		$scope.winner = "";
+
 		//},500);
 
 		//check to see if the computer won
+
 		if ($scope.checkWin($scope.players[1].chip)) {$scope.winner = "player 2 wins"};
 		$scope.resetNextMove();
-		//increase moves
+
+
+
 	}
 
 
@@ -166,7 +163,9 @@ function mainCtrl($scope) {
 			//check to see if player 1 wins
 			if ($scope.checkWin($scope.players[0].chip)) {$scope.winner = "player 1 wins"};
 			//computer's turn
-			$scope.computerMove();
+			if (!$scope.win) {
+				$scope.computerMove();
+			}
 		}
 		console.log("board = " + $scope.board);
 	}

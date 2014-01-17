@@ -7,15 +7,12 @@
 </head>
 <body>
 	<div x-ng-app="" x-ng-controller="mainCtrl" x-ng-init="">
-
 		<div class="gameBoard">
 			<div class="clear" x-ng-repeat="row in board track by $index">
 				<div class="cell" id="cell{{$parent.$index}}{{$index}}" x-ng-repeat="cell in row track by $index" x-ng-click="clicked($parent.$index, $index);">{{board[$parent.$index][$index]}}</div>
 			</div>
 		</div>
-		<label>{{winner}}{{moves}}</label>
+		<label>{{winner}}</label>
 	</div>
 </body>
 </html>
-
-<!-- ((xturn.val = !xturn.val) ? 'X' : 'O') -->
