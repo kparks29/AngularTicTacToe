@@ -1,0 +1,27 @@
+.clear {
+	clear: both;
+}
+
+.gameBoard {
+	border:1px solid lime;
+	height: 306px;
+	width: 306px;
+}
+
+.cell {
+	height: 100px;
+	width: 100px;
+	float: left;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 25px;
+	line-height: 100px;
+}
+
+#cell01, #cell02, #cell11, #cell12, #cell21, #cell22 {
+	border-left: 1px solid black;
+}
+
+#cell00, #cell01, #cell02, #cell10, #cell11, #cell12 {
+	border-bottom: 1px solid black;
+}

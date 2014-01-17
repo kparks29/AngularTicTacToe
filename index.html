@@ -1,8 +1,19 @@
 <html>
 <head>
-	<title></title>
+	<title>AngularJS TicTacToe</title>
+	<script type="text/javascript" src="angular.js"></script>
+	<script type="text/javascript" src="script.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-
+	<div x-ng-app="" x-ng-controller="mainCtrl" x-ng-init="">
+		<div class="gameBoard">
+			<div class="clear" x-ng-repeat="row in board track by $index">
+				<div class="cell" id="cell{{$parent.$index}}{{$index}}" x-ng-repeat="cell in row track by $index" x-ng-click="board[$parent.$index][$index] = (board[$parent.$index][$index] == '' ? ((xturn.val = !xturn.val) ? 'X' : 'O') : board[$parent.$index][$index]); computerMove();">{{cell}}</div>
+			</div>
+		</div>
+		<label>{{winner}}</label>
+	</div>
 </body>
 </html>
+
